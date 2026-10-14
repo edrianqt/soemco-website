@@ -1,0 +1,26 @@
+{% extends "base.html" %}{% load coop_extras %}{% block title %}FAQs{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="wrap">
+  <p class="crumbs"><a href="{% url 'home' %}">Home</a> / FAQs</p>
+  <h1>Frequently asked questions</h1><p class="lead">Stuck on something? Find answers to common questions in one place.</p>
+</div></section>
+<div class="wrap page narrow">
+  <label class="search"><span class="sr">Search questions</span><input id="faq-search" type="search" placeholder="Search, e.g. loan requirements"></label>
+  <div id="faq-list">
+    {% for f in faqs %}<details class="card faq"{% if forloop.first %} open{% endif %}><summary>{{ f.question }}</summary><div class="rich">{{ f.answer|richtext }}</div></details>{% endfor %}
+  </div>
+  <p id="faq-none" class="muted" hidden>No matching questions. <a href="{% url 'contact' %}">Ask us directly</a>.</p>
+  <div class="ready"><div><h2>Need more answers?</h2><p>Our team is ready to help, Monday to Friday, 8:00 AM – 5:00 PM.</p></div>
+    <div class="cta"><a class="btn" href="{% url 'contact' %}">Contact us</a></div></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+  const q = document.getElementById('faq-search'), items = [...document.querySelectorAll('#faq-list details')], none = document.getElementById('faq-none');
+  q.addEventListener('input', () => {
+    const s = q.value.trim().toLowerCase(); let shown = 0;
+    items.forEach(d => { const hit = !s || d.textContent.toLowerCase().includes(s); d.hidden = !hit; if (hit) shown++; if (s && hit) d.open = true; });
+    none.hidden = shown > 0;
+  });
+</script>
+{% endblock %}

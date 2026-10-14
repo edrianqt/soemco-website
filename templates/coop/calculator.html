@@ -1,0 +1,29 @@
+{% extends "base.html" %}{% block title %}Loan calculator{% endblock %}
+{% block content %}
+<section class="wrap page narrow">
+  <h1>Loan calculator</h1>
+  <p class="lead">Estimate your monthly amortization. Enter the interest rate quoted by your SOEMCO branch.</p>
+  <div class="card form">
+    <label>Loan amount (₱)<input id="amt" type="number" min="0" value="50000" /></label>
+    <label>Annual interest rate (%)<input id="rate" type="number" min="0" step="0.01" placeholder="Rate from your branch" /></label>
+    <label>Term (months)<input id="term" type="number" min="1" value="12" /></label>
+    <label>Method<select id="method"><option value="dim">Diminishing balance</option><option value="flat">Flat rate</option></select></label>
+    <div class="result"><small>Estimated monthly payment</small><b id="pay">₱0.00</b><small id="tot"></small></div>
+    <p class="muted">Estimate only. Actual terms, fees and deductions are set by SOEMCO.</p>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+  const $ = id => document.getElementById(id), peso = n => '₱' + n.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  function calc() {
+    const P = +$('amt').value, r = (+$('rate').value || 0) / 100, n = Math.max(1, +$('term').value);
+    let m;
+    if ($('method').value === 'flat') m = (P + P * r * n / 12) / n;
+    else { const i = r / 12; m = i === 0 ? P / n : P * i / (1 - Math.pow(1 + i, -n)); }
+    $('pay').textContent = peso(m || 0);
+    $('tot').textContent = 'Total repayment ' + peso(m * n || 0) + ' · Interest ' + peso(m * n - P || 0);
+  }
+  document.querySelectorAll('.form input,.form select').forEach(e => e.addEventListener('input', calc)); calc();
+</script>
+{% endblock %}

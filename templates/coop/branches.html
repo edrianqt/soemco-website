@@ -1,0 +1,24 @@
+{% extends "base.html" %}{% block title %}Branches{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="wrap">
+  <p class="crumbs"><a href="{% url 'home' %}">Home</a> / Branches</p>
+  <h1>Our branches</h1><p class="lead">Find a SOEMCO branch near you across Surigao del Norte, Surigao del Sur and Agusan del Norte.</p>
+</div></section>
+<div class="wrap page">
+  <div class="chips">
+    <a class="{% if not selected %}on{% endif %}" href="{% url 'branches' %}">All</a>
+    {% for p in provinces %}<a class="{% if selected == p %}on{% endif %}" href="?province={{ p|urlencode }}">{{ p }}</a>{% endfor %}
+  </div>
+  <div class="grid three">
+    {% for b in branches %}
+      <article class="card{% if b.is_main %} main{% endif %}">
+        {% if b.photo %}<img class="card-img" src="{{ b.photo.url }}" alt="SOEMCO {{ b.name }} branch" loading="lazy">{% endif %}
+        <small class="tag">{% if b.is_main %}Main branch{% else %}{{ b.province }}{% endif %}</small>
+        <h3>{{ b.name }}</h3><p>{{ b.address }}</p>{% if b.head %}<p class="muted">{% if b.is_main or 'Satellite' not in b.name %}Branch Manager{% else %}Head{% endif %}: {{ b.head }}</p>{% endif %}
+        <p class="links">{% if b.map_url %}<a href="{{ b.map_url }}" target="_blank" rel="noopener">View map →</a>{% endif %}
+          <a href="{% url 'contact' %}">Contact</a></p>
+      </article>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

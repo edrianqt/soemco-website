@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block title %}Log in{% endblock %}
+{% block content %}
+<section class="wrap page narrow"><h1>{{ t.login }}</h1>
+  <form method="post" class="card form">{% csrf_token %}
+    {% for e in form.non_field_errors %}<span class="err">{{ e }}</span>{% endfor %}
+    <input type="hidden" name="next" value="{{ next }}" />
+    <label>Email<input name="username" type="email" required autocomplete="username" /></label>
+    <label>Password<input name="password" type="password" required autocomplete="current-password" /></label>
+    <button class="btn">{{ t.login }}</button>
+    <p class="muted">No account yet? <a href="{% url 'register' %}">Register</a></p>
+  </form></section>
+{% endblock %}

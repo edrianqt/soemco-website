@@ -1,0 +1,21 @@
+{% extends "base.html" %}{% load coop_extras %}{% block title %}Member stories{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="wrap">
+  <p class="crumbs"><a href="{% url 'home' %}">Home</a> / Testimonials</p>
+  <h1>Member stories</h1><p class="lead">Real stories, real impact — in our members’ own words.</p>
+</div></section>
+<div class="wrap page">
+  {% for s in stories %}
+  <article class="story{% cycle '' ' flip' %}">
+    {% if s.photo %}<img src="{{ s.photo.url }}" alt="{{ s.name }}" loading="lazy">{% endif %}
+    <div>
+      {% if s.title %}<small class="tag">{{ s.title }}</small>{% endif %}
+      <blockquote class="rich">{{ s.story|richtext }}</blockquote>
+      <p class="who"><b>{{ s.name }}</b><br><small>{{ s.info }}{% if s.info and s.branch %} · {% endif %}SOEMCO Member, {{ s.branch }}</small></p>
+    </div>
+  </article>
+  {% endfor %}
+  <div class="ready"><div><h2>Unlock member benefits</h2><p>Join more than 12,000 members across Caraga.</p></div>
+    <div class="cta"><a class="btn" href="{% url 'apply' %}">Become a member</a></div></div>
+</div>
+{% endblock %}

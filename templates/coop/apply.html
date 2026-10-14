@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% block title %}{{ kind }} application{% endblock %}
+{% block content %}
+<section class="wrap page narrow">
+  <h1>{% if kind == "Loan" %}Loan application{% else %}Membership application{% endif %}</h1>
+  <div class="chips">
+    <a class="{% if kind == 'Membership' %}on{% endif %}" href="{% url 'apply_kind' 'Membership' %}">Membership</a>
+    <a class="{% if kind == 'Loan' %}on{% endif %}" href="{% url 'apply_kind' 'Loan' %}">Loan</a>
+  </div>
+  <form method="post" class="card form">{% csrf_token %}
+    {% for e in form.non_field_errors %}<span class="err">{{ e }}</span>{% endfor %}
+    {% for field in form %}{% include "_field.html" %}{% endfor %}
+    <button class="btn">Submit application</button>
+    <p class="muted">Submitting does not guarantee approval. A SOEMCO officer will contact you.</p>
+  </form>
+</section>
+{% endblock %}

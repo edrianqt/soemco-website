@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% block title %}Products & services{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="wrap">
+  <p class="crumbs"><a href="{% url 'home' %}">Home</a> / Products &amp; services</p>
+  <h1>Products &amp; services</h1>
+  <p class="lead">Loans, savings, insurance and community services for every stage of life. Rates, fees and requirements are confirmed at your branch.</p>
+  <nav class="chips light">{% for c in categories %}<a href="#{{ c.slug }}">{{ c.category }}</a>{% endfor %}</nav>
+</div></section>
+<div class="wrap page">
+  {% for c in categories %}
+  <section class="svc-section" id="{{ c.slug }}">
+    <div class="section-head"><div><h2>{{ c.icon }} {{ c.category }}</h2><p class="muted">{{ c.summary }}</p></div><a href="{{ c.get_absolute_url }}">View {{ c.category }} →</a></div>
+    {% if c.programs.all %}
+      <div class="grid">
+        {% for p in c.programs.all %}
+          <a class="card" href="{{ p.get_absolute_url }}">{% if p.image %}<img class="card-img" src="{{ p.image.url }}" alt="" loading="lazy">{% endif %}
+            <h3>{{ p.name }}</h3><p>{{ p.summary|truncatewords:22 }}</p><span class="more">Learn more →</span></a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="card empty"><p>Visit your nearest SOEMCO branch to learn about {{ c.category }}.</p>
+        <a class="btn small-blue" href="{% url 'branches' %}">Find a branch</a></div>
+    {% endif %}
+  </section>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% block title %}My applications{% endblock %}
+{% block content %}
+<section class="wrap page"><h1>{{ t.my_apps }}</h1>
+  {% if not apps %}<p class="lead">Nothing yet. <a href="{% url 'apply' %}">Start an application</a>.</p>
+  {% else %}
+  <div class="tablewrap"><table><tr><th>Date</th><th>Type</th><th>Branch</th><th>Amount</th><th>Status</th></tr>
+  {% for a in apps %}<tr><td>{{ a.created|date:"M j, Y" }}</td><td>{{ a.kind }} {{ a.loan_type }}</td><td>{{ a.branch }}</td>
+    <td>{% if a.amount %}₱{{ a.amount|floatformat:"2g" }}{% else %}–{% endif %}</td><td><span class="pill {{ a.status }}">{{ a.get_status_display }}</span></td></tr>{% endfor %}
+  </table></div>{% endif %}
+</section>
+{% endblock %}

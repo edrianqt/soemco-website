@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block title %}Register{% endblock %}
+{% block content %}
+<section class="wrap page narrow"><h1>Create your account</h1>
+  <form method="post" class="card form">{% csrf_token %}
+    {% for field in form %}{% include "_field.html" %}{% endfor %}
+    <button class="btn">Register</button>
+    <p class="muted">Already registered? <a href="{% url 'login' %}">Log in</a></p>
+  </form></section>
+{% endblock %}

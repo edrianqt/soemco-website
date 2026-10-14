@@ -1,0 +1,34 @@
+{% extends "base.html" %}{% block title %}{{ post.title }}{% endblock %}
+{% block content %}
+<article class="wrap page article">
+  <p class="crumbs dark"><a href="{% url 'home' %}">Home</a> / <a href="{% url 'news' %}">News</a> / {{ post.tag }}</p>
+  <small class="tag">{{ post.tag }} · {{ post.published_on|date:"F j, Y" }}</small>
+  <h1 class="article-title">{{ post.title }}</h1>
+  {% if post.image %}<img class="article-cover" src="{{ post.image.url }}" alt="">{% endif %}
+  <div class="article-body">
+    {% for p in post.paragraphs %}<p>{{ p }}</p>{% empty %}<p>{{ post.summary }}</p>{% endfor %}
+  </div>
+  {% if gallery %}
+    <h2>Photos</h2>
+    <div class="gallery">
+      {% for g in gallery %}<button type="button" class="gallery-item" data-src="{{ g.image.url }}" aria-label="View photo {{ forloop.counter }}"><img src="{{ g.image.url }}" alt="" loading="lazy"></button>{% endfor %}
+    </div>
+    <dialog id="lightbox"><img alt=""><form method="dialog"><button aria-label="Close">✕</button></form></dialog>
+  {% endif %}
+  <p><a href="{% url 'news' %}">← Back to all news</a></p>
+</article>
+{% if more %}
+<section class="wrap"><h2>More news</h2><div class="grid three">
+  {% for n in more %}<a class="card" href="{{ n.get_absolute_url }}">{% if n.image %}<img class="card-img" src="{{ n.image.url }}" alt="" loading="lazy">{% endif %}<small class="tag">{{ n.published_on|date:"M j, Y" }}</small><h3>{{ n.title }}</h3></a>{% endfor %}
+</div></section>
+{% endif %}
+{% endblock %}
+{% block scripts %}
+<script>
+  const box = document.getElementById('lightbox');
+  if (box) document.querySelectorAll('.gallery-item').forEach(b => b.addEventListener('click', () => {
+    box.querySelector('img').src = b.dataset.src; box.showModal();
+  }));
+  if (box) box.addEventListener('click', e => { if (e.target === box) box.close(); });
+</script>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero{% if slides %} has-photos{% endif %}">
+  {% if slides %}<div class="hero-slides" aria-hidden="true">
+    {% for s in slides %}<img src="{{ s.image.url }}" alt="" class="{% if forloop.first %}on{% endif %}"{% if not forloop.first %} loading="lazy"{% endif %}>{% endfor %}
+  </div>{% endif %}
+  <div class="rings" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="wrap">
+    <p class="eyebrow">Socorro Empowered People’s Cooperative</p>
+    <h1>Care within <em>your reach.</em></h1>
+    <p class="lead">Loans, savings, insurance and livelihood support — built by members, for members, across Surigao and Agusan.</p>
+    <div class="cta">
+      <a class="btn" href="{% url 'apply' %}">{{ t.become_member }}</a>
+      <a class="btn ghost" href="{% url 'branches' %}">{{ t.find_branch }}</a>
+    </div>
+  </div>
+</section>
+
+<section class="wrap stats">
+  <div><b><span data-count="29">29</span></b><small>Years in service</small></div>
+  <div><b>₱<span data-count="834.3" data-dec="1">834.3</span>M+</b><small>Assets, Dec 2024</small></div>
+  <div><b><span data-count="12">12</span>K+</b><small>Members, Dec 2024</small></div>
+  <div><b><span data-count="11">11</span></b><small>Branches, Aug 2025</small></div>
+</section>
+
+{% for a in announcements %}
+<section class="wrap"><article class="advisory">
+  <span class="advisory-ico" aria-hidden="true">📢</span>
+  <div><small class="tag">Advisory</small><h2>{{ a.title }}</h2>{% for p in a.paragraphs %}<p>{{ p }}</p>{% endfor %}</div>
+</article></section>
+{% endfor %}
+
+<section class="wrap quick">
+  <a href="{% url 'apply' %}"><span>📝</span>Online membership</a>
+  <a href="{% url 'calculator' %}"><span>🧮</span>Loan calculator</a>
+  <a href="{% url 'forms' %}"><span>📄</span>Download forms</a>
+  <a href="{% url 'branches' %}"><span>📍</span>Branch locator</a>
+</section>
+
+<section class="wrap">
+  <div class="section-head"><h2>Everything you need, close to home</h2><a href="{% url 'products' %}">All services →</a></div>
+  <div class="grid">
+    {% for p in products %}
+      <a class="card" href="{{ p.get_absolute_url }}">
+        {% if p.image %}<img class="card-img" src="{{ p.image.url }}" alt="" loading="lazy">{% else %}<span class="ico">{{ p.icon }}</span>{% endif %}
+        <h3>{{ p.category }}</h3><p>{{ p.summary }}</p>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+
+{% if story %}
+<section class="wrap">
+  <div class="section-head"><h2>What SOEMCO members say</h2><a href="{% url 'stories' %}">Read more stories →</a></div>
+  <article class="story feature">
+    {% if story.photo %}<img src="{{ story.photo.url }}" alt="{{ story.name }}" loading="lazy">{% endif %}
+    <div><blockquote>{{ story.story|truncatewords:60 }}</blockquote>
+      <p class="who"><b>{{ story.name }}</b><br><small>{{ story.info }}{% if story.info and story.branch %} · {% endif %}{{ story.branch }}</small></p></div>
+  </article>
+</section>
+{% endif %}
+
+<section class="wrap">
+  <div class="section-head"><h2>Latest news &amp; events</h2><a href="{% url 'news' %}">All news →</a></div>
+  <div class="grid three">
+    {% for n in news %}
+      <a class="card" href="{{ n.get_absolute_url }}">{% if n.image %}<img class="card-img" src="{{ n.image.url }}" alt="" loading="lazy">{% endif %}
+        <small class="tag">{{ n.tag }} · {{ n.published_on|date:"M j, Y" }}</small><h3>{{ n.title }}</h3><p>{{ n.summary|truncatewords:28 }}</p></a>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+  (function () {
+    const imgs = document.querySelectorAll('.hero-slides img');
+    if (imgs.length < 2 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let i = 0;
+    setInterval(() => { imgs[i].classList.remove('on'); i = (i + 1) % imgs.length; imgs[i].classList.add('on'); }, 6000);
+  })();
+</script>
+{% endblock %}

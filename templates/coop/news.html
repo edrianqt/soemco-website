@@ -1,0 +1,22 @@
+{% extends "base.html" %}{% block title %}News & events{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="wrap">
+  <p class="crumbs"><a href="{% url 'home' %}">Home</a> / News &amp; events</p>
+  <h1>News &amp; events</h1><p class="lead">Stay updated with the latest news, activities and upcoming events from SOEMCO.</p>
+</div></section>
+<div class="wrap page">
+  <nav class="chips"><a class="{% if not tag %}on{% endif %}" href="{% url 'news' %}">All</a>{% for t in tags %}<a class="{% if tag == t %}on{% endif %}" href="?tag={{ t|urlencode }}">{{ t }}</a>{% endfor %}</nav>
+  <div class="grid three">
+    {% for n in posts %}
+      <a class="card" href="{{ n.get_absolute_url }}">{% if n.image %}<img class="card-img" src="{{ n.image.url }}" alt="" loading="lazy">{% endif %}
+        <small class="tag">{{ n.tag }} · {{ n.published_on|date:"M j, Y" }}</small><h3>{{ n.title }}</h3><p>{{ n.summary|truncatewords:26 }}</p><span class="more">Read more →</span></a>
+    {% empty %}<p class="lead">No news yet.</p>{% endfor %}
+  </div>
+  {% if page.has_other_pages %}
+  <nav class="pager">
+    {% if page.has_previous %}<a href="?page={{ page.previous_page_number }}{% if tag %}&tag={{ tag|urlencode }}{% endif %}">← Newer</a>{% endif %}
+    <span>Page {{ page.number }} of {{ page.paginator.num_pages }}</span>
+    {% if page.has_next %}<a href="?page={{ page.next_page_number }}{% if tag %}&tag={{ tag|urlencode }}{% endif %}">Older →</a>{% endif %}
+  </nav>{% endif %}
+</div>
+{% endblock %}

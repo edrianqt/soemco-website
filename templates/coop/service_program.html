@@ -1,0 +1,39 @@
+{% extends "base.html" %}{% load coop_extras %}{% block title %}{{ program.name }}{% endblock %}
+{% block content %}
+<section class="page-hero{% if program.image %} with-photo{% endif %}">
+  {% if program.image %}<img class="page-hero-img" src="{{ program.image.url }}" alt="">{% endif %}
+  <div class="wrap">
+    <p class="crumbs"><a href="{% url 'home' %}">Home</a> / <a href="{% url 'products' %}">Services</a> / <a href="{{ category.get_absolute_url }}">{{ category.category }}</a> / {{ program.name }}</p>
+    <h1>{{ program.name }}</h1><p class="lead">{{ program.summary }}</p>
+    {% if program.people %}<p class="people">👤 {{ program.people }}</p>{% endif %}
+    <div class="cta">
+      {% if program.loan_type %}<a class="btn" href="{% url 'apply_kind' 'Loan' %}?type={{ program.loan_type }}">Apply for this loan</a>
+        <a class="btn ghost" href="{% url 'calculator' %}">Estimate payments</a>
+      {% else %}<a class="btn" href="{% url 'contact' %}?topic={% if category.slug == 'savings-deposit' %}Savings{% elif category.slug == 'life-and-non-life-insurance' %}Insurance{% else %}Allied services{% endif %}">Ask about this</a>
+        <a class="btn ghost" href="{% url 'branches' %}">Find a branch</a>{% endif %}
+    </div>
+  </div>
+</section>
+<div class="wrap page">
+  {% if offerings %}
+    <h2>{% if offerings|length == 1 %}What you get{% else %}Choose what fits you{% endif %}</h2>
+    <div class="offerings">
+      {% for o in offerings %}
+        <article class="card offering">
+          {% if o.image %}<img class="card-img" src="{{ o.image.url }}" alt="" loading="lazy">{% endif %}
+          <h3>{{ o.name }}</h3>
+          <div class="rich">{{ o.description|richtext }}</div>
+          {% if o.eligibility %}<p class="elig"><b>Eligible:</b> {{ o.eligibility }}</p>{% endif %}
+        </article>
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% if program.photo2 %}<figure class="team"><img src="{{ program.photo2.url }}" alt="{{ program.name }} team" loading="lazy"><figcaption>{{ program.name }}{% if program.people %} — {{ program.people }}{% endif %}</figcaption></figure>{% endif %}
+  <div class="ready"><div><h2>Ready to get started?</h2><p>Bring your requirements to any branch. <a href="{% url 'forms' %}">Download the forms</a> ahead of time.</p></div>
+    <div class="cta"><a class="btn" href="{% url 'branches' %}">Find a branch near you</a><a class="btn ghost" href="{% url 'faqs' %}">Read the FAQs</a></div></div>
+  {% if siblings %}
+    <h2>More in {{ category.category }}</h2>
+    <div class="grid">{% for p in siblings %}<a class="card" href="{{ p.get_absolute_url }}">{% if p.image %}<img class="card-img" src="{{ p.image.url }}" alt="" loading="lazy">{% endif %}<h3>{{ p.name }}</h3><p>{{ p.summary|truncatewords:18 }}</p></a>{% endfor %}</div>
+  {% endif %}
+</div>
+{% endblock %}

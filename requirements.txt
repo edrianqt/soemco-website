@@ -1,0 +1,5 @@
+Django>=5.1,<5.3
+Pillow>=10.4           # photo uploads and resizing
+whitenoise>=6.7         # serves CSS/JS in production
+gunicorn>=22.0        # production server (Linux)
+psycopg[binary]>=3.2  # only needed if you use PostgreSQL

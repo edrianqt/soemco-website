@@ -1,0 +1,22 @@
+{% extends "base.html" %}{% block title %}Downloadable forms{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="wrap">
+  <p class="crumbs"><a href="{% url 'home' %}">Home</a> / Forms</p>
+  <h1>Downloadable forms</h1><p class="lead">Membership and loan documents. Print, fill out and bring them to your branch to save time.</p>
+</div></section>
+<div class="wrap page narrow">
+  {% for category, docs in groups %}
+    <h2>{{ category }}</h2>
+    <div class="doc-list">
+      {% for d in docs %}
+        <div class="doc">
+          <span class="doc-ico {{ d.file_type|lower }}">{{ d.file_type }}</span>
+          <div><h3>{{ d.title }}</h3>{% if d.description %}<p class="muted">{{ d.description }}</p>{% endif %}</div>
+          <a class="btn small-blue" href="{{ d.url }}" {% if d.file %}download{% else %}target="_blank" rel="noopener"{% endif %}>Download</a>
+        </div>
+      {% endfor %}
+    </div>
+  {% empty %}<p class="lead">No forms yet.</p>{% endfor %}
+  <p class="muted">Not sure what to bring? See the <a href="{% url 'faqs' %}">membership and loan requirements</a>.</p>
+</div>
+{% endblock %}
